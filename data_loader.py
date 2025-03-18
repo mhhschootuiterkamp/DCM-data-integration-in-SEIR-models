@@ -36,7 +36,7 @@ For CoronaMelder data:
 '''
 
 #Load contact tracing data from coronamelder
-df_melder = pd.read_excel('Corona_melder.xlsx')
+df_melder = (pd.read_csv('ggd_positive_test_authorisations.csv')).rename(columns = {'Date (yyyy-mm-dd)':'Date','Reported positive tests through app authorised by GGD (daily)': 'Counts'})
 df_melder['Date'] =  pd.to_datetime(df_melder['Date'])
 df_melder['Active users'] = np.nan
 df_melder = df_melder.set_index('Date')
@@ -46,7 +46,7 @@ df_melder.loc[dt.datetime.strptime('29apr2021',date_format):dt.datetime.strptime
 df_melder['Counts'] = df_melder['Counts'].interpolate()
 
 #Additional data points for coronamelder data:
-df_melder.at[dt.datetime.strptime('10oct2020', date_format),'Active users'] = df_melder.at[dt.datetime.strptime('10oct2020', date_format),'Users']
+df_melder.at[dt.datetime.strptime('10oct2020', date_format),'Active users'] = 2260489
 df_melder.at[dt.datetime.strptime('30apr2021', date_format),'Active users'] = 3049347
 df_melder.at[dt.datetime.strptime('31may2021', date_format),'Active users'] = 3327002
 df_melder.at[dt.datetime.strptime('30jun2021', date_format),'Active users'] = 2883373
@@ -62,7 +62,7 @@ df_melder.at[dt.datetime.strptime('28feb2022', date_format),'Active users'] = 24
 #Interpolate number of active users in coronamelder and compute rate of counts per user
 df_melder['Active users'] = df_melder['Active users'].interpolate()
 df_melder['Rate'] = df_melder['Counts'] / df_melder['Active users'] 
-
+df_melder = df_melder.dropna()
 
 '''
 For COVID RADAR data:
